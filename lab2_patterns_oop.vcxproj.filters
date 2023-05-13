@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="lab2_patterns_oop.cpp">
+    <ClCompile Include="Sorts.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
