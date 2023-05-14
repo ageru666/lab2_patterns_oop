@@ -328,54 +328,5 @@ template <typename T>
 SortingFacade<T>* SortingFacade<T>::instance = nullptr;
 
 
-int main() {
-    using T = double;
-    std::vector<T> numbers = { 5.2, 2.1, 9.4, 1.7, 3.8 };
-
-    SortingFacade<T>* facade = SortingFacade<T>::getInstance();
-
-    facade->setSortStrategy("quicksort");
-    facade->sort(numbers);
-    std::cout << "QuickSort: ";
-    for (const auto& number : numbers) {
-        std::cout << number << " ";
-    }
-    std::cout << std::endl;
-
-    facade->setSortStrategy("bubblesort");
-    facade->sort(numbers);
-    std::cout << "BubbleSort: ";
-    for (const auto& number : numbers) {
-        std::cout << number << " ";
-    }
-    std::cout << std::endl;
-
-    facade->setSortStrategy("mergesort");
-    facade->sort(numbers);
-    std::cout << "MergeSortStrategy: ";
-    for (const auto& number : numbers) {
-        std::cout << number << " ";
-    }
-    std::cout << std::endl;
-
-    facade->setSortStrategy("insertionsort");
-    facade->sort(numbers);
-    std::cout << "InsertionSortStrategy: ";
-    for (const auto& number : numbers) {
-        std::cout << number << " ";
-    }
-    std::cout << std::endl;
-
-    facade->setSortStrategy("heapsort");
-    facade->sort(numbers);
-    std::cout << "HeapSortStrategy: ";
-    for (const auto& number : numbers) {
-        std::cout << number << " ";
-    }
-    std::cout << std::endl;
-
-    return 0;
-}
-
 
 
