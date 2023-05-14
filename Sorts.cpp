@@ -203,12 +203,32 @@ public:
         return nullptr;
     }
 };
+
+template <typename T>
+class SortingTimerDecorator : public SortStrategy<T> {
+private:
+    SortStrategy<T>* strategy;
+
+public:
+  
+    SortingTimerDecorator(SortStrategy<T>* strategy) : strategy(strategy) {}
+
+    void sort(std::vector<T>& array) override {
+        clock_t startTime = clock();
+        strategy->sort(array);
+        clock_t endTime = clock();
+
+        double timeTaken = double(endTime - startTime) / CLOCKS_PER_SEC;
+        std::cout << "Sorting time: " << timeTaken << " seconds" << std::endl;
+    }
+};
 int main() {
     using T = double;
     std::vector<T> numbers = { 5.2, 2.1, 9.4, 1.7, 3.8 };
 
     SortStrategy<T>* strategy = SortStrategyFactory<T>::createSortStrategy("quicksort");
-    strategy->sort(numbers);
+    SortingTimerDecorator<T> decorator(strategy);
+    decorator.sort(numbers);
     delete strategy;
 
     std::cout << "QuickSort: ";
@@ -218,7 +238,8 @@ int main() {
     std::cout << std::endl;
 
     strategy = SortStrategyFactory<T>::createSortStrategy("bubblesort");
-    strategy->sort(numbers);
+    decorator = SortingTimerDecorator<T>(strategy);
+    decorator.sort(numbers);
     delete strategy;
 
     std::cout << "BubbleSort: ";
@@ -228,7 +249,8 @@ int main() {
     std::cout << std::endl;
 
     strategy = SortStrategyFactory<T>::createSortStrategy("mergesort");
-    strategy->sort(numbers);
+    decorator = SortingTimerDecorator<T>(strategy);
+    decorator.sort(numbers);
     delete strategy;
 
     std::cout << "MergeSortStrategy: ";
@@ -238,7 +260,8 @@ int main() {
     std::cout << std::endl;
 
     strategy = SortStrategyFactory<T>::createSortStrategy("insertionsort");
-    strategy->sort(numbers);
+    decorator = SortingTimerDecorator<T>(strategy);
+    decorator.sort(numbers);
     delete strategy;
 
     std::cout << "InsertionSortStrategy: ";
@@ -248,7 +271,8 @@ int main() {
     std::cout << std::endl;
 
     strategy = SortStrategyFactory<T>::createSortStrategy("heapsort");
-    strategy->sort(numbers);
+    decorator = SortingTimerDecorator<T>(strategy);
+    decorator.sort(numbers);
     delete strategy;
 
     std::cout << "HeapSortStrategy: ";
@@ -259,4 +283,5 @@ int main() {
 
     return 0;
 }
+
 
