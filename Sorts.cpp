@@ -1,5 +1,8 @@
 ﻿#include <iostream>
 #include <vector>
+#include <ctime>
+
+
 
 template <typename T>
 class SortStrategy {
@@ -222,59 +225,99 @@ public:
         std::cout << "Sorting time: " << timeTaken << " seconds" << std::endl;
     }
 };
+
+template <typename T>
+class SortingFacade {
+private:
+    static SortingFacade<T>* instance;
+    SortStrategy<T>* sortStrategy;
+    SortingTimerDecorator<T>* timerDecorator;
+
+    SortingFacade() : sortStrategy(nullptr), timerDecorator(nullptr) {}
+
+public:
+
+    static SortingFacade<T>* getInstance() {
+        if (instance == nullptr) {
+            instance = new SortingFacade<T>();
+        }
+        return instance;
+    }
+
+
+    ~SortingFacade() {
+        delete sortStrategy;
+        delete timerDecorator;
+    }
+
+
+    void setSortStrategy(const std::string& algorithm) {
+        if (sortStrategy) {
+            delete sortStrategy;
+        }
+
+        sortStrategy = SortStrategyFactory<T>::createSortStrategy(algorithm);
+    }
+
+    void sort(std::vector<T>& array) {
+        if (!sortStrategy) {
+            std::cout << "Need to set Sorting Strategy." << std::endl;
+            return;
+        }
+
+        if (timerDecorator) {
+            delete timerDecorator;
+        }
+
+        timerDecorator = new SortingTimerDecorator<T>(sortStrategy);
+        timerDecorator->sort(array);
+    }
+};
+
+template <typename T>
+SortingFacade<T>* SortingFacade<T>::instance = nullptr;
+
+
 int main() {
     using T = double;
     std::vector<T> numbers = { 5.2, 2.1, 9.4, 1.7, 3.8 };
 
-    SortStrategy<T>* strategy = SortStrategyFactory<T>::createSortStrategy("quicksort");
-    SortingTimerDecorator<T> decorator(strategy);
-    decorator.sort(numbers);
-    delete strategy;
+    SortingFacade<T>* facade = SortingFacade<T>::getInstance();
 
+    facade->setSortStrategy("quicksort");
+    facade->sort(numbers);
     std::cout << "QuickSort: ";
     for (const auto& number : numbers) {
         std::cout << number << " ";
     }
     std::cout << std::endl;
 
-    strategy = SortStrategyFactory<T>::createSortStrategy("bubblesort");
-    decorator = SortingTimerDecorator<T>(strategy);
-    decorator.sort(numbers);
-    delete strategy;
-
+    facade->setSortStrategy("bubblesort");
+    facade->sort(numbers);
     std::cout << "BubbleSort: ";
     for (const auto& number : numbers) {
         std::cout << number << " ";
     }
     std::cout << std::endl;
 
-    strategy = SortStrategyFactory<T>::createSortStrategy("mergesort");
-    decorator = SortingTimerDecorator<T>(strategy);
-    decorator.sort(numbers);
-    delete strategy;
-
+    facade->setSortStrategy("mergesort");
+    facade->sort(numbers);
     std::cout << "MergeSortStrategy: ";
     for (const auto& number : numbers) {
         std::cout << number << " ";
     }
     std::cout << std::endl;
 
-    strategy = SortStrategyFactory<T>::createSortStrategy("insertionsort");
-    decorator = SortingTimerDecorator<T>(strategy);
-    decorator.sort(numbers);
-    delete strategy;
-
+    facade->setSortStrategy("insertionsort");
+    facade->sort(numbers);
     std::cout << "InsertionSortStrategy: ";
     for (const auto& number : numbers) {
         std::cout << number << " ";
     }
     std::cout << std::endl;
 
-    strategy = SortStrategyFactory<T>::createSortStrategy("heapsort");
-    decorator = SortingTimerDecorator<T>(strategy);
-    decorator.sort(numbers);
-    delete strategy;
-
+    facade->setSortStrategy("heapsort");
+    facade->sort(numbers);
     std::cout << "HeapSortStrategy: ";
     for (const auto& number : numbers) {
         std::cout << number << " ";
@@ -283,5 +326,6 @@ int main() {
 
     return 0;
 }
+
 
 
