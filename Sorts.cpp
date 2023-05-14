@@ -2,19 +2,29 @@
 #include <vector>
 #include <ctime>
 
-
-
+/**
+    * @brief SortStrategy template.
+    *
+    * This template defines the interface for different sorting strategies.
+    * Subclasses must implement the sort() function to provide their specific sorting algorithm.
+    */
 template <typename T>
 class SortStrategy {
 public:
-   
+     /**
+     * @brief Sorts the given vector in a specific way.
+     * @param array The vector to be sorted.
+     */
     virtual void sort(std::vector<T>& array) = 0;
 };
 
 template <typename T>
 class QuickSortStrategy : public SortStrategy<T> {
 public:
-  
+    /**
+    * @brief Sorts the given vector using the QuickSort algorithm.
+    * @param array The vector to be sorted.
+    */
     void sort(std::vector<T>& array) override {
         quicksort(array, 0, array.size() - 1);
     }
@@ -47,6 +57,10 @@ private:
 template <typename T>
 class BubbleSortStrategy : public SortStrategy<T> {
 public:
+    /**
+    * @brief Sorts the given vector using the BubbleSort algorithm.
+    * @param array The vector to be sorted.
+    */
     void sort(std::vector<T>& array) override {
         int size = array.size();
 
@@ -63,6 +77,10 @@ public:
 template <typename T>
 class MergeSortStrategy : public SortStrategy<T> {
 public:
+    /**
+    * @brief Sorts the given vector using the MergeSort algorithm.
+    * @param array The vector to be sorted.
+    */
     void sort(std::vector<T>& array) override {
         mergesort(array, 0, array.size() - 1);
     }
@@ -125,6 +143,10 @@ private:
 template <typename T>
 class InsertionSortStrategy : public SortStrategy<T> {
 public:
+    /**
+    * @brief Sorts the given vector using the InsertionSort algorithm.
+    * @param array The vector to be sorted.
+    */
     void sort(std::vector<T>& array) override {
         int size = array.size();
 
@@ -145,6 +167,10 @@ public:
 template <typename T>
 class HeapSortStrategy : public SortStrategy<T> {
 public:
+    /**
+    * @brief Sorts the given vector using the HeapSort algorithm.
+    * @param array The vector to be sorted.
+    */
     void sort(std::vector<T>& array) override {
         int size = array.size();
 
@@ -181,6 +207,11 @@ private:
 template <typename T>
 class SortStrategyFactory {
 public:
+    /**
+    * @brief Creates a specific sorting strategy based on the provided algorithm.
+    * @param algorithm The algorithm name.
+    * @return A pointer to the created SortStrategy object, or nullptr if the algorithm is not supported.
+    */
     static SortStrategy<T>* createSortStrategy(const std::string& algorithm) {
         if (algorithm == "quicksort") {
             return new QuickSortStrategy<T>();
@@ -213,9 +244,16 @@ private:
     SortStrategy<T>* strategy;
 
 public:
-  
+    /**
+    * @brief Constructs a SortingTimerDecorator object.
+    * @param strategy The underlying sorting strategy to be decorated.
+    */
     SortingTimerDecorator(SortStrategy<T>* strategy) : strategy(strategy) {}
 
+    /**
+    * @brief Sorts the given vector using the decorated strategy and measures the sorting time.
+    * @param array The vector to be sorted.
+    */
     void sort(std::vector<T>& array) override {
         clock_t startTime = clock();
         strategy->sort(array);
@@ -236,7 +274,10 @@ private:
     SortingFacade() : sortStrategy(nullptr), timerDecorator(nullptr) {}
 
 public:
-
+    /**
+    * @brief Returns the singleton instance of SortingFacade.
+    * @return The singleton instance.
+    */
     static SortingFacade<T>* getInstance() {
         if (instance == nullptr) {
             instance = new SortingFacade<T>();
@@ -244,13 +285,18 @@ public:
         return instance;
     }
 
-
+    /**
+    * @brief Destructor. Cleans up allocated memory.
+    */
     ~SortingFacade() {
         delete sortStrategy;
         delete timerDecorator;
     }
 
-
+    /**
+    * @brief Sets the sorting strategy based on the provided algorithm name.
+    * @param algorithm The algorithm name.
+    */
     void setSortStrategy(const std::string& algorithm) {
         if (sortStrategy) {
             delete sortStrategy;
@@ -258,7 +304,11 @@ public:
 
         sortStrategy = SortStrategyFactory<T>::createSortStrategy(algorithm);
     }
-
+    /**
+    * @brief Sorts the given vector using the currently set sorting strategy.
+    * @param array The vector to be sorted.
+    * @note If no sorting strategy is set, an error message will be displayed.
+    */
     void sort(std::vector<T>& array) {
         if (!sortStrategy) {
             std::cout << "Need to set Sorting Strategy." << std::endl;
