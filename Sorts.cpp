@@ -174,12 +174,40 @@ private:
         }
     }
 };
+
+template <typename T>
+class SortStrategyFactory {
+public:
+    static SortStrategy<T>* createSortStrategy(const std::string& algorithm) {
+        if (algorithm == "quicksort") {
+            return new QuickSortStrategy<T>();
+        }
+        else if (algorithm == "mergesort") {
+            return new MergeSortStrategy<T>();
+        }
+        else if (algorithm == "bubblesort") {
+            return new BubbleSortStrategy<T>();
+        }
+        else if (algorithm == "insertionsort") {
+            return new InsertionSortStrategy<T>();
+        }
+
+        else if (algorithm == "heapsort") {
+            return new HeapSortStrategy<T>();
+        }
+
+        else {
+            std::cout << "Invalid sorting algorithm." << std::endl;
+        }
+
+        return nullptr;
+    }
+};
 int main() {
     using T = double;
     std::vector<T> numbers = { 5.2, 2.1, 9.4, 1.7, 3.8 };
 
-    
-    SortStrategy<T>* strategy = new QuickSortStrategy<T>();
+    SortStrategy<T>* strategy = SortStrategyFactory<T>::createSortStrategy("quicksort");
     strategy->sort(numbers);
     delete strategy;
 
@@ -189,8 +217,7 @@ int main() {
     }
     std::cout << std::endl;
 
-    
-    strategy = new BubbleSortStrategy<T>();
+    strategy = SortStrategyFactory<T>::createSortStrategy("bubblesort");
     strategy->sort(numbers);
     delete strategy;
 
@@ -200,7 +227,7 @@ int main() {
     }
     std::cout << std::endl;
 
-    strategy = new MergeSortStrategy<T>();
+    strategy = SortStrategyFactory<T>::createSortStrategy("mergesort");
     strategy->sort(numbers);
     delete strategy;
 
@@ -210,7 +237,7 @@ int main() {
     }
     std::cout << std::endl;
 
-    strategy = new InsertionSortStrategy<T>();
+    strategy = SortStrategyFactory<T>::createSortStrategy("insertionsort");
     strategy->sort(numbers);
     delete strategy;
 
@@ -220,7 +247,7 @@ int main() {
     }
     std::cout << std::endl;
 
-    strategy = new HeapSortStrategy<T>();
+    strategy = SortStrategyFactory<T>::createSortStrategy("heapsort");
     strategy->sort(numbers);
     delete strategy;
 
@@ -230,6 +257,6 @@ int main() {
     }
     std::cout << std::endl;
 
-
     return 0;
 }
+
