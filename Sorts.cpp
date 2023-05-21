@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <vector>
 #include <ctime>
+#include <thread>
 
 /**
     * @brief SortStrategy template.
@@ -205,6 +206,91 @@ private:
 };
 
 template <typename T>
+class MultiThreadMergeSortStrategy : public SortStrategy<T> {
+public:
+    /**
+     * @brief Sorts the given vector using the Multi-Threaded MergeSort algorithm.
+     * @param array The vector to be sorted.
+     */
+    void sort(std::vector<T>& array) override {
+        multiThreadMergeSort(array, 0, array.size() - 1);
+    }
+
+private:
+    void multiThreadMergeSort(std::vector<T>& array, int low, int high) {
+        if (low < high) {
+            if (high - low < 10000) {
+                mergesort(array, low, high);
+            }
+            else {
+                int middle = low + (high - low) / 2;
+
+                std::thread leftThread(&MultiThreadMergeSortStrategy<T>::multiThreadMergeSort, this, std::ref(array), low, middle);
+                std::thread rightThread(&MultiThreadMergeSortStrategy<T>::multiThreadMergeSort, this, std::ref(array), middle + 1, high);
+
+                leftThread.join();
+                rightThread.join();
+
+                merge(array, low, middle, high);
+            }
+        }
+    }
+
+    void mergesort(std::vector<T>& array, int low, int high) {
+        if (low < high) {
+            int middle = low + (high - low) / 2;
+            mergesort(array, low, middle);
+            mergesort(array, middle + 1, high);
+            merge(array, low, middle, high);
+        }
+    }
+
+    void merge(std::vector<T>& array, int low, int middle, int high) {
+        int leftSize = middle - low + 1;
+        int rightSize = high - middle;
+
+        std::vector<T> leftArray(leftSize);
+        std::vector<T> rightArray(rightSize);
+
+        for (int i = 0; i < leftSize; i++) {
+            leftArray[i] = array[low + i];
+        }
+
+        for (int j = 0; j < rightSize; j++) {
+            rightArray[j] = array[middle + 1 + j];
+        }
+
+        int i = 0;
+        int j = 0;
+        int k = low;
+
+        while (i < leftSize && j < rightSize) {
+            if (leftArray[i] <= rightArray[j]) {
+                array[k] = leftArray[i];
+                i++;
+            }
+            else {
+                array[k] = rightArray[j];
+                j++;
+            }
+            k++;
+        }
+
+        while (i < leftSize) {
+            array[k] = leftArray[i];
+            i++;
+            k++;
+        }
+
+        while (j < rightSize) {
+            array[k] = rightArray[j];
+            j++;
+            k++;
+        }
+    }
+};
+
+template <typename T>
 class SortStrategyFactory {
 public:
     /**
@@ -225,7 +311,9 @@ public:
         else if (algorithm == "insertionsort") {
             return new InsertionSortStrategy<T>();
         }
-
+        else if (algorithm == "multithreadmergesort") {
+            return new MultiThreadMergeSortStrategy<T>();
+        }
         else if (algorithm == "heapsort") {
             return new HeapSortStrategy<T>();
         }
