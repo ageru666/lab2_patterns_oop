@@ -12,7 +12,8 @@ TEST_CASE("Sorting Algorithms") {
     SUBCASE("QuickSort") {
         SortingFacade<float>::getInstance()->setSortStrategy("quicksort");
 
-        std::vector<float> numbers(100);
+        std::cout << "QuickSort: ";
+        std::vector<float> numbers(1000);
         std::uniform_real_distribution<float> distribution(1.0f, 1000.0f);
         for (int i = 0; i < 100; i++) {
             numbers[i] = distribution(generator);
@@ -26,7 +27,8 @@ TEST_CASE("Sorting Algorithms") {
     SUBCASE("BubbleSort") {
         SortingFacade<int>::getInstance()->setSortStrategy("bubblesort");
 
-        std::vector<int> numbers(100);
+        std::cout << "BubbleSort: ";
+        std::vector<int> numbers(1000);
         std::uniform_int_distribution<int> distribution(1, 1000);
         for (int i = 0; i < 100; i++) {
             numbers[i] = distribution(generator);
@@ -40,6 +42,7 @@ TEST_CASE("Sorting Algorithms") {
     SUBCASE("InsertionSort") {
         SortingFacade<char>::getInstance()->setSortStrategy("insertionsort");
 
+        std::cout << "InsertionSort: ";
         std::vector<char> letters = { 'd', 'a', 'c', 'b', 'e' };
         SortingFacade<char>::getInstance()->sort(letters);
 
@@ -49,6 +52,7 @@ TEST_CASE("Sorting Algorithms") {
     SUBCASE("HeapSort") {
         SortingFacade<double>::getInstance()->setSortStrategy("heapsort");
 
+        std::cout << "HeapSort: ";
         std::vector<double> numbers(100);
         std::uniform_real_distribution<double> distribution(0.0, 1.0);
         for (int i = 0; i < 100; i++) {
@@ -62,6 +66,8 @@ TEST_CASE("Sorting Algorithms") {
     }
     SUBCASE("MergeSort") {
         SortingFacade<long>::getInstance()->setSortStrategy("mergesort");
+
+        std::cout << "MergeSort: ";
         std::vector<long> numbers(1000000);
         std::uniform_int_distribution<long> distribution(1, 10000000);
         for (int i = 0; i < 100; i++) {
@@ -76,6 +82,7 @@ TEST_CASE("Sorting Algorithms") {
     SUBCASE("MultiThreadMergeSort") {
         SortingFacade<long>::getInstance()->setSortStrategy("multithreadmergesort");
 
+        std::cout << "MultiThreadMergeSort: ";
         std::vector<long> numbers(1000000);
         std::uniform_int_distribution<long> distribution(1, 10000000);
         for (int i = 0; i < 100; i++) {
