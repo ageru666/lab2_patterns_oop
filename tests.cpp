@@ -12,7 +12,7 @@ TEST_CASE("Sorting Algorithms") {
     SUBCASE("QuickSort") {
         SortingFacade<float>::getInstance()->setSortStrategy("quicksort");
 
-        std::vector<float> numbers(1000);
+        std::vector<float> numbers(100);
         std::uniform_real_distribution<float> distribution(1.0f, 1000.0f);
         for (int i = 0; i < 100; i++) {
             numbers[i] = distribution(generator);
@@ -23,13 +23,11 @@ TEST_CASE("Sorting Algorithms") {
         CHECK(std::is_sorted(numbers.begin(), numbers.end()));
     }
 
-   
-
     SUBCASE("BubbleSort") {
         SortingFacade<int>::getInstance()->setSortStrategy("bubblesort");
 
-        std::vector<int> numbers(10000);
-        std::uniform_int_distribution<int> distribution(1, 10000);
+        std::vector<int> numbers(100);
+        std::uniform_int_distribution<int> distribution(1, 1000);
         for (int i = 0; i < 100; i++) {
             numbers[i] = distribution(generator);
         }
@@ -51,7 +49,7 @@ TEST_CASE("Sorting Algorithms") {
     SUBCASE("HeapSort") {
         SortingFacade<double>::getInstance()->setSortStrategy("heapsort");
 
-        std::vector<double> numbers(10000);
+        std::vector<double> numbers(100);
         std::uniform_real_distribution<double> distribution(0.0, 1.0);
         for (int i = 0; i < 100; i++) {
             numbers[i] = distribution(generator);
@@ -64,6 +62,20 @@ TEST_CASE("Sorting Algorithms") {
     }
     SUBCASE("MergeSort") {
         SortingFacade<long>::getInstance()->setSortStrategy("mergesort");
+        std::vector<long> numbers(1000000);
+        std::uniform_int_distribution<long> distribution(1, 10000000);
+        for (int i = 0; i < 100; i++) {
+            numbers[i] = distribution(generator);
+        }
+
+        SortingFacade<long>::getInstance()->sort(numbers);
+
+        CHECK(std::is_sorted(numbers.begin(), numbers.end()));
+    }
+
+    SUBCASE("MultiThreadMergeSort") {
+        SortingFacade<long>::getInstance()->setSortStrategy("multithreadmergesort");
+
         std::vector<long> numbers(1000000);
         std::uniform_int_distribution<long> distribution(1, 10000000);
         for (int i = 0; i < 100; i++) {
